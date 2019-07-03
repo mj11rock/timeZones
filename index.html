@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Clock</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	
+<main>
+	<div class="timezone">
+		<h3>Timezone:</h3>
+		<div class="tzone-parameters">
+			<p id="tzone"></p>
+			<button id="add" class="btn btn-add" value="+60">
+				<p>+1 to UTC</p>
+			</button>
+			<button id="sub" class="btn btn-sub" value="-60">
+				<p>-1 to UTC</p>
+			</button>
+		</div>
+
+	</div>
+	<div class="clock">
+		<canvas id="scene"></canvas>
+		
+		<input id="copy" type="hidden" value="asd" />
+	</div>
+</main>
+
+
+
+<script src="node_modules/moment/moment.js"></script>
+<script src="node_modules/script.js"></script>
+<script type="text/javascript">
+	
+	const clock = document.getElementsByClassName("cop"); //DOM clock
+	const tZone = document.getElementById("tzone"); //DOM which timezone
+	const addZone = document.getElementById("add").onclick = addUTC;
+	const subZone = document.getElementById("sub").onclick = subUTC;
+	var currentZone = +300;
+	
+	function changeTimeSec(){ //changing clock time  
+		
+		var date = moment().utcOffset(currentZone).format("H:mm:ss");
+		if(date[date.length-1]%5==0)
+			initScene(date);
+		
+	}
+
+	function addUTC(){ //+1 from UTC
+		currentZone += 60;
+		originZone(currentZone);
+	}
+	function subUTC(){ //-1 from UTC
+		currentZone -= 60;
+		originZone(currentZone);
+	}
+
+	function originZone(zone = 300){ //recalculate timezone
+		if(currentZone < -660)
+			currentZone = 720;
+		if(currentZone > 720)
+			currentZone = -660;
+
+		tZone.textContent = moment().utcOffset(currentZone).format("Z");
+	}
+
+	originZone();
+	window.addEventListener("click", changeTimeSec);
+	var timerId = setInterval(changeTimeSec, 1000); //update clock
+	
+</script>
+</body>
+</html>
